@@ -43,7 +43,7 @@ Each correct evidence finding also opens a short case-context popup connecting t
 4. Case 04: identify Count `6` and select the conclusions that the payment followed the marketing warnings and that the charging paragraph places it in the alleged scheme. Reject the later-model cause and the claim that the table reveals what the investor was told. This unlocks W fragment `38`.
 5. Physical card: token `K7Q`, order F–M–I–W. Final input: `K7Q-51-108-07-38`.
 
-Case is ignored, surrounding whitespace is trimmed, and spaces around hyphens are accepted. Group structure and the leading zero are required. The final credential works only after all stages. Solved documents stay readable; the evidence notebook can be printed during play or after completion. “Start over” asks for confirmation and clears that device's session. Presenter reset does the same. Two views of the same session should not be played simultaneously.
+Case is ignored, surrounding whitespace is trimmed, and spaces around hyphens are accepted. Group structure and the leading zero are required. The final credential works only after all stages. Solved documents stay readable; the evidence notebook can be reviewed during play or after completion. “Start over” asks for confirmation and clears that device's session. Presenter reset does the same. Two views of the same session should not be played simultaneously.
 
 ## Historical and legal framing
 

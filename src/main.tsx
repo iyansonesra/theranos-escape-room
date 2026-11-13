@@ -529,15 +529,11 @@ function Notebook({ game, full = false }: { game: Game; full?: boolean }) {
             : "Investigation in progress"}
         </p>
       )}
-      <button className="text-button" onClick={() => printSection("notebook")}>
-        <Printer size={14} /> Print evidence worksheet
-      </button>
     </section>
   );
 }
 function printSection(section: string) {
   const selectors: Record<string, string> = {
-    notebook: ".print-notebook .notebook",
     card: ".override-card",
     blank: ".blank-worksheet",
   };
@@ -829,7 +825,6 @@ function App() {
             </div>
             <span className="eyebrow">EMPLOYEE ACCESS TERMINAL</span>
             <h2>Begin your investigation.</h2>
-            <p>No credentials required. Only a team willing to look closer.</p>
             {game ? (
               <>
                 <div className="resume">
@@ -1484,9 +1479,6 @@ function App() {
           />
         )}
       </dialog>
-      <div className="print-notebook">
-        <Notebook game={game} full />
-      </div>
     </>
   );
 }
