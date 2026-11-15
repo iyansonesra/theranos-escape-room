@@ -8,137 +8,17 @@ export type Source = {
 };
 const court =
   "https://files.cand.uscourts.gov/files/18-CR-00258_USA_v_Balwani/";
-// Exhibit 2623, pages 1 and 2. Keep the original values, including assumptions.
-export const financialColumns = [
-  "Year",
-  "Revenue",
-  "COS %",
-  "G&A increase",
-  "R&D increase",
-  "Cost per device",
-  "Price per test",
-  "Tests per day per machine",
-  "Devices needed",
-  "Tests per day",
-  "OPEX",
-];
-export const financialModels = [
+export const demonstrationConclusions = [
   {
-    date: "July 16, 2015",
-    page: 1,
-    rows: [
-      [
-        "2015",
-        "$53M",
-        "35%",
-        "30%",
-        "10%",
-        "$40K",
-        "$35",
-        "8",
-        "531",
-        "4,184",
-        "$136M",
-      ],
-      [
-        "2016",
-        "$153M",
-        "32%",
-        "30%",
-        "10%",
-        "$35K",
-        "$35",
-        "8",
-        "992",
-        "12,012",
-        "$155M",
-      ],
-      [
-        "2017",
-        "$253M",
-        "32%",
-        "30%",
-        "10%",
-        "$30K",
-        "$35",
-        "8",
-        "992",
-        "19,840",
-        "$178M",
-      ],
-      [
-        "2018",
-        "$503M",
-        "30%",
-        "30%",
-        "10%",
-        "$25K",
-        "$35",
-        "8",
-        "3,011",
-        "39,409",
-        "$205M",
-      ],
-    ],
+    id: "A",
+    text: "Investors were led to believe the Theranos device was testing their samples.",
   },
+  { id: "B", text: "Guests provided blood samples during the demonstration." },
   {
-    date: "June 27, 2015",
-    page: 2,
-    rows: [
-      [
-        "2015",
-        "$113M",
-        "35%",
-        "30%",
-        "10%",
-        "$40K",
-        "$35",
-        "8",
-        "1,126",
-        "8,845",
-        "$136M",
-      ],
-      [
-        "2016",
-        "$223M",
-        "32%",
-        "30%",
-        "10%",
-        "$35K",
-        "$35",
-        "8",
-        "1,091",
-        "17,455",
-        "$155M",
-      ],
-      [
-        "2017",
-        "$323M",
-        "32%",
-        "30%",
-        "10%",
-        "$30K",
-        "$35",
-        "8",
-        "1,000",
-        "25,284",
-        "$178M",
-      ],
-      [
-        "2018",
-        "$503M",
-        "30%",
-        "30%",
-        "10%",
-        "$25K",
-        "$35",
-        "8",
-        "2,912",
-        "39,374",
-        "$205M",
-      ],
-    ],
+    id: "C",
+    text: "Some samples were secretly tested on other companies’ machines.",
   },
+  { id: "D", text: "The presentation involved prospective investors." },
 ];
 export const clueDebriefs = [
   {
@@ -169,22 +49,22 @@ export const clueDebriefs = [
     sourceIds: [2],
   },
   {
-    title: "Two different financial claims",
-    element: "Materiality",
+    title: "How the demonstration worked",
+    element: "Scheme to defraud",
     explanation:
-      "Your 60-108 answer connects two different numbers. The 2015 forecast dropped by $60 million. Separately, the SEC said an investor was shown $108 million as revenue already earned in 2014, even though recorded revenue was only a little more than $100,000. That difference could affect someone’s decision to invest.",
+      "You identified the misleading impression and the hidden testing method. Investors were led to believe the Theranos device was testing their samples, while some samples were secretly tested on other companies’ machines.",
     context:
-      "Past revenue helps investors judge whether a business is working. That is why the discrepancy alleged in the SEC complaint matters to the materiality part of the case.",
-    sourceIds: [3, 4],
+      "Together, those actions show how the presentation was arranged to mislead prospective investors about the technology. This connects the testing claims to a method of seeking investment. The court’s 2025 opinion describes employee and investor testimony about these demonstrations.",
+    sourceIds: [3],
   },
   {
-    title: "A revision is not enough",
-    element: "Evaluating the evidence",
+    title: "Why the revenue claim mattered",
+    element: "Material misrepresentation",
     explanation:
-      "You correctly answered “No.” Forecasts are estimates, so changing one is not automatically fraud. The bigger issue here is the allegation that an investor was given a false number for revenue the company had already earned.",
+      "Your answer, 108, identifies the $108 million presented as revenue already earned in 2014. The SEC alleged that Theranos had actually recorded only a little more than $100,000 that year. That difference could affect an investor’s decision to put money into the company.",
     context:
-      "A changed estimate and a false statement about the past are different things. That difference matters when deciding what the evidence actually shows.",
-    sourceIds: [3, 4],
+      "The demonstration record shows a method of gaining investors’ confidence. The revenue allegation adds a specific financial claim that would matter to someone deciding whether to invest. These connect the scheme and materiality parts of the case.",
+    sourceIds: [4],
   },
   {
     title: "Following the investor’s money",
@@ -192,14 +72,14 @@ export const clueDebriefs = [
     explanation:
       "You linked Count 6 to the earlier records. On February 6, 2014, $38,336,632 moved from Investor #3’s Citibank account to Theranos’s Comerica account. The marketing warnings came before this payment. The filing places the transfer within the alleged investor-fraud scheme.",
     context:
-      "The July 2015 model came later, so it could not have caused this 2014 payment. The bank row also does not tell us which claims this investor received. The filing supplies the alleged scheme connection; the earlier records add context about claims and knowledge. You have now connected the wire part to the rest of the case.",
+      "The SEC complaint was filed in 2018, after this 2014 payment. The bank row also does not tell us which claims this investor received. The filing supplies the alleged scheme connection; the earlier records add context about claims and knowledge. You have now connected the wire part to the rest of the case.",
     sourceIds: [5],
   },
 ];
 export const wireConclusions = [
   {
     id: "B",
-    text: "The payment was prompted by the revised July 2015 financial model.",
+    text: "The SEC complaint had already been filed when this payment was made.",
   },
   {
     id: "A",
@@ -240,14 +120,12 @@ export const sources: Source[] = [
     url: court + "3981.pdf",
   },
   {
-    id: "SRC-2623",
-    title: "Exhibit 2623 · Revised financial projections",
-    date: "June–July 2015",
-    pages: "Pages 1–2",
-    kind: "Contemporaneous internal forecasts",
-    url:
-      court +
-      "Trial%20Exh.%202623%20Email%20From%20D.Y.%20To%20Elizabeth%20Holmes;%207.16.2015_Redacted.pdf",
+    id: "SRC-APPEAL2025",
+    title: "U.S. v. Holmes · Investor demonstrations",
+    date: "February 24, 2025",
+    pages: "PDF page 12 · Employee and investor testimony",
+    kind: "2025 / Court opinion summarizing trial testimony",
+    url: "https://cdn.ca9.uscourts.gov/datastore/opinions/2025/02/24/23-1167.pdf#page=12",
   },
   {
     id: "SRC-SEC2018",
@@ -308,17 +186,17 @@ export const files = [
     message: "LEADERSHIP WARNING LOCATED. Evidence fragment recovered.",
   },
   {
-    name: "The money story",
+    name: "The pitch",
     tag: "EXECUTIVE ACCESS",
     element: "M",
-    label: "Materiality",
+    label: "Scheme / materiality",
     fragment: "108",
     sourceIds: [3, 4],
     summary:
-      "Changing a forecast is different from giving an investor a false number for revenue already earned.",
-    why: "The SEC’s allegation about past revenue concerns money supposedly already earned. Connecting that claim to investors’ decisions helps explain materiality. A changed forecast is a different kind of statement.",
+      "The demonstration record describes concealed testing arrangements. The SEC complaint describes a financial claim made to an investor.",
+    why: "The court’s account of the demonstrations connects a misleading impression with a concealed testing method. The SEC’s revenue allegation adds a specific financial representation. Together they connect the scheme to information that would matter to investors.",
     message:
-      "FINANCIAL DISCREPANCY CONFIRMED IN REGULATORY ALLEGATIONS. Forecasts are not booked revenue.",
+      "INVESTOR PITCH EXAMINED. Scheme and materiality records connected.",
   },
   {
     name: "The transfer",
@@ -329,7 +207,7 @@ export const files = [
     sourceIds: [5],
     summary:
       "Count 6 alleged a February 6, 2014 electronic transfer of $38,336,632 from Citibank to Comerica.",
-    why: "The filing connects the investor payment to the alleged scheme. The earlier records add context about claims and leadership’s knowledge, while the transfer supplies the interstate-wire connection. The dates help rule out a link to the later 2015 forecast.",
+    why: "The filing connects the investor payment to the alleged scheme. The earlier records add context about claims and leadership’s knowledge, while the transfer supplies the interstate-wire connection. The dates place the payment after the marketing warnings and before the SEC complaint.",
     message: "INVESTOR FUNDS TRACED. The last credential is offline.",
   },
 ];

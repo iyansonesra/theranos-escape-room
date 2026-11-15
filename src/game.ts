@@ -1,4 +1,5 @@
-export const STORAGE_KEY = "theranos-vault-v1";
+// The earlier puzzle set stays in its original key; these revised tasks use v2.
+export const STORAGE_KEY = "theranos-vault-v2";
 export const SETTINGS_KEY = "theranos-settings-v1";
 export const normalize = (value: string) =>
   value
@@ -9,13 +10,16 @@ export const expected = [
   "ALL",
   "TT3",
   "SEVERAL",
-  "60-108",
-  "NO",
+  "AC",
+  "108",
   "6-AC",
   "K7Q-51-108-07-38",
 ];
 export function wireFinding(count: string, conclusions: string[]) {
-  return `${normalize(count)}-${[...new Set(conclusions)].sort().join("")}`;
+  return `${normalize(count)}-${conclusionFinding(conclusions)}`;
+}
+export function conclusionFinding(conclusions: string[]) {
+  return [...new Set(conclusions)].sort().join("");
 }
 export const stageForStep = (step: number) =>
   step < 2 ? 0 : step === 2 ? 1 : step < 5 ? 2 : step === 5 ? 3 : 4;
@@ -86,8 +90,8 @@ export const hints = [
   "Focus on the company’s claim about the range of tests, not the blood sample size.",
   "Scan the % failures column and identify the row with the maximum value.",
   "Find the bullet about replacing the claim that Theranos could do every test. Read the two alternatives in order.",
-  "Subtract the revised 2015 forecast from the earlier forecast. Then find the historical 2014 figure allegedly presented to an investor.",
-  "An estimate about the future is different from a claim about money already earned.",
+  "Compare what the guests were led to believe with how their samples were actually processed. Focus on the concealed arrangement, rather than routine parts of a demonstration.",
+  "Look for the figure presented as revenue already earned in 2014, rather than the amount the SEC said was actually recorded.",
   "Keep the dates in view. Separate what the bank row shows from what the charging paragraph and earlier emails add.",
   "Follow the order on the physical card. Preserve the leading zero in your knowledge / intent fragment.",
 ];

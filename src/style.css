@@ -1644,17 +1644,6 @@ td {
   font-size: 9px;
   line-height: 1.7;
 }
-.financial-model {
-  margin: 26px 0;
-}
-.financial-model h3 {
-  font-size: 12px;
-  font-weight: 400;
-  margin: 0 0 12px;
-}
-.financial-table {
-  min-width: 1050px;
-}
 .source-excerpt {
   font-size: 12px;
   font-weight: 400;

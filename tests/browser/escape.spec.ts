@@ -85,59 +85,87 @@ test("teams explore directories, unlock files manually, and escape", async ({
     page.getByRole("dialog", { name: "You’re in. Look closer." }),
   ).not.toBeVisible();
   await dismissDebrief(page, "SEVERAL");
-  await openEntry(page, "03_the_money_story");
-  await openEntry(page, "revenue_model_2015.csv");
-  await expect(page.locator(".financial-table")).toHaveCount(2);
+  await openEntry(page, "03_the_pitch");
   await expect(
-    page.locator(".financial-table").first().locator("tbody tr"),
-  ).toHaveCount(4);
+    page
+      .locator(".directory-row")
+      .filter({ hasText: "sec_complaint_2018.record" }),
+  ).toBeDisabled();
+  await openEntry(page, "investor_demonstrations_2025.record");
+  await expect(page.locator(".source-meta")).toContainText("SRC-APPEAL2025");
+  await expect(page.locator(".source-meta")).toContainText("February 24, 2025");
   await expect(
-    page.locator(".financial-table").last().locator("tbody tr"),
-  ).toHaveCount(4);
-  await expect(page.locator(".financial-table").first()).toContainText("$153M");
-  await expect(page.locator(".financial-table").last()).toContainText("$323M");
-  await expect(page.locator(".financial-table").first()).toContainText(
-    "39,409",
-  );
+    page.getByRole("tab", { name: "sec_complaint_2018.record" }),
+  ).toBeDisabled();
+  await expect(page.locator(".paper")).toContainText("null protocol");
+  await page
+    .getByRole("checkbox", {
+      name: "Guests provided blood samples during the demonstration.",
+      exact: true,
+    })
+    .check();
+  await page.getByRole("button", { name: "Verify finding" }).click();
+  await expect(page.getByRole("status")).toContainText("Finding not verified");
+  await expect(page.locator(".evidence-debrief")).not.toBeVisible();
+  await page
+    .getByRole("checkbox", {
+      name: "Investors were led to believe the Theranos device was testing their samples.",
+      exact: true,
+    })
+    .check();
+  await page
+    .getByRole("checkbox", {
+      name: "Some samples were secretly tested on other companies’ machines.",
+      exact: true,
+    })
+    .check();
+  await page.getByRole("button", { name: "Verify finding" }).click();
+  await expect(page.getByRole("status")).toContainText("Finding not verified");
+  await page
+    .getByRole("checkbox", {
+      name: "Guests provided blood samples during the demonstration.",
+      exact: true,
+    })
+    .uncheck();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBeTruthy();
-  expect(
-    await page
-      .getByRole("region", { name: "Financial model from July 16, 2015" })
-      .evaluate((el) => el.scrollWidth > el.clientWidth),
-  ).toBeTruthy();
   await page.screenshot({
-    path: "test-results/financial-model-mobile.png",
+    path: "test-results/investor-demonstrations-mobile.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page.getByRole("tab", { name: "sec_complaint_2018.record" }).click();
-  await page
-    .getByLabel(
-      "Projection reduction and historical revenue, separated by a hyphen",
-    )
-    .fill("60 - 108");
   await page.getByRole("button", { name: "Verify finding" }).click();
-  await dismissDebrief(page, "$60 million");
-  await page.getByRole("button", { name: "Yes", exact: true }).click();
+  await dismissDebrief(page, "misleading impression");
+  await expect(
+    page.getByRole("heading", { name: "Investor demonstrations", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "← Folder contents" }).click();
+  await expect(
+    page
+      .locator(".directory-row")
+      .filter({ hasText: "sec_complaint_2018.record" }),
+  ).toBeEnabled();
+  await openEntry(page, "sec_complaint_2018.record");
+  await page.getByLabel("Historical revenue in millions").fill("0.1");
+  await page.getByRole("button", { name: "Verify finding" }).click();
   await expect(page.getByRole("status")).toContainText("Finding not verified");
-  await expect(page.locator(".evidence-debrief")).not.toBeVisible();
-  await page.getByRole("button", { name: "No", exact: true }).click();
-  await dismissDebrief(page, "“No.”");
+  await page.getByLabel("Historical revenue in millions").fill("108");
+  await page.getByRole("button", { name: "Verify finding" }).click();
+  await dismissDebrief(page, "$108 million");
   await page.getByRole("button", { name: "Return to archive root" }).click();
   await openEntry(page, "04_the_transfer");
   await openEntry(page, "superseding_information_2020.record");
   await page.getByLabel("Transfer count", { exact: true }).fill("6");
-  await page.getByRole("checkbox", { name: /payment was prompted/ }).check();
+  await page.getByRole("checkbox", { name: /complaint had already/ }).check();
   await page.getByRole("checkbox", { name: /payment came after/ }).check();
   await page.getByRole("button", { name: "Verify finding" }).click();
   await expect(page.getByRole("status")).toContainText("Finding not verified");
   await expect(page.locator(".evidence-debrief")).not.toBeVisible();
-  await page.getByRole("checkbox", { name: /payment was prompted/ }).uncheck();
+  await page.getByRole("checkbox", { name: /complaint had already/ }).uncheck();
   await page
     .getByRole("checkbox", { name: /charging paragraph places/ })
     .check();
@@ -211,9 +239,9 @@ test("mobile exploration, briefing persistence, hints, expiry, and presenter pri
     ),
   ).toBeTruthy();
   await page.evaluate(() => {
-    const g = JSON.parse(localStorage.getItem("theranos-vault-v1")!);
+    const g = JSON.parse(localStorage.getItem("theranos-vault-v2")!);
     g.startedAt = Date.now() - 16 * 60000;
-    localStorage.setItem("theranos-vault-v1", JSON.stringify(g));
+    localStorage.setItem("theranos-vault-v2", JSON.stringify(g));
   });
   await page.reload();
   await page

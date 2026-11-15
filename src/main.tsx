@@ -30,11 +30,11 @@ import {
   submit,
   takeHint,
   wireFinding,
+  conclusionFinding,
 } from "./game";
 import {
   clueDebriefs,
-  financialColumns,
-  financialModels,
+  demonstrationConclusions,
   files,
   qc,
   sources,
@@ -61,7 +61,7 @@ function SourceMeta({ index }: { index: number }) {
 const documentNames = [
   ["website_comments_2013.eml", "march_elisa_qc_2014.csv"],
   ["forwarded_website_comments_2013.eml"],
-  ["revenue_model_2015.csv", "sec_complaint_2018.record"],
+  ["investor_demonstrations_2025.record", "sec_complaint_2018.record"],
   ["superseding_information_2020.record"],
 ];
 function Directory({
@@ -84,7 +84,7 @@ function Directory({
           name: `0${i + 1}_${f.name.toLowerCase().replaceAll(" ", "_")}`,
           locked: i > current,
           kind: "Directory",
-          date: i < 2 ? "2013–2014" : i === 2 ? "2015 / 2018" : "2020",
+          date: i < 2 ? "2013–2014" : i === 2 ? "2018 / 2025" : "2020",
         })),
         {
           name: "executive_override",
@@ -95,7 +95,9 @@ function Directory({
       ]
     : documentNames[selected].map((name, i) => ({
         name,
-        locked: selected === 0 && i === 1 && step < 1,
+        locked:
+          i === 1 &&
+          ((selected === 0 && step < 1) || (selected === 2 && step < 4)),
         kind: name.endsWith(".eml")
           ? "Email record"
           : name.endsWith(".csv")
@@ -320,68 +322,35 @@ function Document({
     return (
       <>
         <SourceMeta index={3} />
-        <article className="paper">
+        <article className="paper legal">
           <div className="paper-label">
-            INTERNAL EMAIL · REPRODUCED MODEL TABLES
+            2025 / COURT OPINION · PARAPHRASED EXCERPT
           </div>
-          <h2>RE: 409A</h2>
-          <dl>
-            <dt>From</dt>
-            <dd>Danise Yam</dd>
-            <dt>To</dt>
-            <dd>Elizabeth Holmes; Sunny Balwani</dd>
-            <dt>Sent</dt>
-            <dd>July 16, 2015, 2:42 AM</dd>
-          </dl>
-          <blockquote>
-            “Revised the revenue numbers per discussion and updated the model.”
-          </blockquote>
-          <p className="annotation">
-            Email context, paraphrased: Yam says the updated model will go to
-            Aranca and asks how many options will be granted at the new value.
-            The thread also includes an earlier model sent to Holmes and
-            Balwani.
+          <h2>Investor demonstrations</h2>
+          <p>U.S. Court of Appeals for the Ninth Circuit · U.S. v. Holmes</p>
+          <hr />
+          <p>
+            Theranos invited prospective investors to watch demonstrations of
+            its technology. Guests were led to believe that the Theranos device
+            was testing their blood.
           </p>
-          {financialModels.map((model) => (
-            <section className="financial-model" key={model.page}>
-              <h3>
-                {model.date} · Exhibit page {model.page}
-              </h3>
-              <div
-                className="table-scroll"
-                role="region"
-                aria-label={`Financial model from ${model.date}`}
-                tabIndex={0}
-              >
-                <table className="financial-table">
-                  <thead>
-                    <tr>
-                      {financialColumns.map((column) => (
-                        <th key={column} scope="col">
-                          {column}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {model.rows.map((row) => (
-                      <tr key={row[0]}>
-                        {row.map((value, i) => (
-                          <td key={i}>{value}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ))}
+          <p>
+            Employees testified that the device actually ran a “null protocol,”
+            while some guests’ samples were secretly tested on machines made by
+            other companies.
+          </p>
+          <p>
+            Investors testified that they had been led to believe Theranos used
+            its own equipment. They said that knowing about the use of other
+            companies’ machines would have affected their investment decisions.
+          </p>
           <p className="note">
-            These tables show forecasts and model assumptions, not revenue
-            already earned. M means millions; K means thousands. The device
-            counts and testing volumes are results based on the model's
-            assumptions. Scroll sideways to see all columns.
+            The court summarizes employee and investor testimony from the
+            trials. This excerpt is paraphrased from PDF page 12.
           </p>
+          <div className="paper-footer">
+            U.S. V. HOLMES · FEBRUARY 24, 2025 <span>PAGE 12</span>
+          </div>
         </article>
       </>
     );
@@ -553,9 +522,9 @@ const questions = [
   "Find the word that makes the company’s testing claim sound unlimited.",
   "Which assay raises the biggest concern when you compare its share of failed QC runs? Record its identifier.",
   "What was the last alternative suggested for the testing claim in the forwarded legal comments?",
-  "Compare the 2015 outlook in the two emails with the SEC’s account of what an investor was told about 2014. Record the forecast drop and the claimed past revenue, both in millions.",
-  "Is changing the forecast enough, on its own, to prove fraud?",
-  "Find the Citibank investor payment that came after the marketing warnings but before the model emails. Record the count, then select only the conclusions supported by the records.",
+  "Which two details distinguish this demonstration from an openly disclosed test using outside equipment? Select both.",
+  "According to the SEC complaint, what was a prospective investor told Theranos had already earned in 2014? Enter the amount in millions.",
+  "Find the Citibank investor payment that came after the marketing warnings but before the SEC complaint. Record the count, then select only the conclusions supported by the records.",
   "Enter the token and arrange your evidence fragments in the order printed on the physical card.",
 ];
 
@@ -575,7 +544,6 @@ function App() {
   const [now, setNow] = useState(Date.now());
   const [zoom, setZoom] = useState("");
   const [worksheet, setWorksheet] = useState(false);
-  const [moneyTabs, setMoneyTabs] = useState<number[]>([]);
   const [storageError, setStorageError] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const briefingDialog = useRef<HTMLDialogElement>(null);
@@ -651,19 +619,12 @@ function App() {
   }
   function start() {
     if (!team.trim()) return;
-    setMoneyTabs([]);
     setGame(newGame(team, members, duration));
     setEntered(true);
     choose(-1);
   }
   function verify(value = answer) {
     if (!game) return;
-    if (game.step === 3 && moneyTabs.length < 2) {
-      setMessage(
-        "Open both the internal forecast and the later SEC complaint before verifying the comparison.",
-      );
-      return;
-    }
     const updated = submit(game, value, selected);
     if (updated === game) {
       setMessage(
@@ -1135,8 +1096,8 @@ function App() {
                 <div className="timeline">
                   <span>POST-EXPOSÉ INVESTIGATIVE RECORDS</span>
                   <p>
-                    This folder includes a 2015 financial model and a later SEC
-                    complaint. The complaint was filed in 2018.
+                    Investor demonstrations and financial claims. These records
+                    come from a 2025 court opinion and a 2018 SEC complaint.
                   </p>
                 </div>
               )}
@@ -1157,8 +1118,6 @@ function App() {
                   onFolder={choose}
                   onDocument={(n) => {
                     setTab(n);
-                    if (selected === 2)
-                      setMoneyTabs((prev) => Array.from(new Set([...prev, n])));
                   }}
                 />
               ) : (
@@ -1176,20 +1135,22 @@ function App() {
                         role="tab"
                         aria-selected={tab === i}
                         key={t}
-                        disabled={selected === 0 && i === 1 && step < 1}
+                        disabled={
+                          i === 1 &&
+                          ((selected === 0 && step < 1) ||
+                            (selected === 2 && step < 4))
+                        }
                         onClick={() => {
                           setTab(i);
-                          if (selected === 2)
-                            setMoneyTabs((prev) =>
-                              Array.from(new Set([...prev, i])),
-                            );
                         }}
                         className={tab === i ? "active" : ""}
                       >
                         {t}
-                        {selected === 0 && i === 1 && step < 1 && (
-                          <LockKeyhole size={12} />
-                        )}
+                        {i === 1 &&
+                          ((selected === 0 && step < 1) ||
+                            (selected === 2 && step < 4)) && (
+                            <LockKeyhole size={12} />
+                          )}
                       </button>
                     ))}
                   </div>
@@ -1201,7 +1162,8 @@ function App() {
           {!game.completedAt &&
             selected === current &&
             (tab >= 0 || selected === 4) &&
-            (selected !== 0 || tab === (step === 0 ? 0 : 1)) && (
+            (selected !== 0 || tab === (step === 0 ? 0 : 1)) &&
+            (selected !== 2 || tab === (step === 3 ? 0 : 1)) && (
               <section className="verification">
                 <div className="verification-title">
                   <span className="eyebrow">
@@ -1259,25 +1221,41 @@ function App() {
                       Verify finding <ArrowRight size={16} />
                     </button>
                   </form>
-                ) : step === 4 ? (
-                  <div className="judgment">
-                    <button
-                      onClick={() => {
-                        setAnswer("YES");
-                        verify("YES");
-                      }}
-                    >
-                      Yes
+                ) : step === 3 ? (
+                  <form
+                    className="wire-analysis demonstration-analysis"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      verify(conclusionFinding(selectedConclusions));
+                    }}
+                  >
+                    <fieldset>
+                      <legend>
+                        Choose the details that reveal the misleading
+                        arrangement.
+                      </legend>
+                      {demonstrationConclusions.map((option) => (
+                        <label className="conclusion-option" key={option.id}>
+                          <input
+                            type="checkbox"
+                            checked={selectedConclusions.includes(option.id)}
+                            onChange={(e) => {
+                              setSelectedConclusions((prev) =>
+                                e.target.checked
+                                  ? [...prev, option.id]
+                                  : prev.filter((id) => id !== option.id),
+                              );
+                              setMessage("");
+                            }}
+                          />
+                          <span>{option.text}</span>
+                        </label>
+                      ))}
+                    </fieldset>
+                    <button type="submit" className="primary">
+                      Verify finding <ArrowRight size={16} />
                     </button>
-                    <button
-                      onClick={() => {
-                        setAnswer("NO");
-                        verify("NO");
-                      }}
-                    >
-                      No
-                    </button>
-                  </div>
+                  </form>
                 ) : (
                   <form
                     onSubmit={(e) => {
@@ -1286,8 +1264,8 @@ function App() {
                     }}
                   >
                     <label className="sr-only" htmlFor="answer">
-                      {step === 3
-                        ? "Projection reduction and historical revenue, separated by a hyphen"
+                      {step === 4
+                        ? "Historical revenue in millions"
                         : step === 6
                           ? "Complete executive credential"
                           : "Your evidence answer"}
@@ -1300,8 +1278,8 @@ function App() {
                         setMessage("");
                       }}
                       placeholder={
-                        step === 3
-                          ? "Decrease-historical revenue"
+                        step === 4
+                          ? "Amount in millions"
                           : step === 6
                             ? "Enter complete credential"
                             : "Enter your finding"
@@ -1615,12 +1593,14 @@ function Presenter({
                 </td>
               </tr>
               <tr>
-                <td>The money story</td>
-                <td>60-108 → No</td>
+                <td>The pitch</td>
+                <td>
+                  Misleading impression + hidden third-party testing → 108
+                </td>
                 <td>M / 108</td>
                 <td>
-                  2–3 min. 113 − 53 = 60. Historical revenue and forecasts are
-                  different.
+                  2–3 min. Select the first and third demonstration details,
+                  then find the claimed historical revenue in the SEC record.
                 </td>
               </tr>
               <tr>
@@ -1630,8 +1610,9 @@ function Presenter({
                 <td>
                   About 2 min. Select the conclusions that the payment followed
                   the marketing warnings and that the charging paragraph links
-                  it to the alleged scheme. Reject the 2015-model cause and the
-                  claim that the bank row identifies what the investor was told.
+                  it to the alleged scheme. Reject the claim that the SEC
+                  complaint predated the payment and the claim that the bank row
+                  identifies what the investor was told.
                 </td>
               </tr>
               <tr>
@@ -1706,10 +1687,12 @@ function Presenter({
             requires the totality of the evidence, not receipt of one email.
           </li>
           <li>
-            <b>Forecast versus history (60 seconds).</b> A changing forecast is
-            not inherently fraud. Ask why an allegedly inaccurate statement of
-            revenue already earned could matter to a reasonable investor. The
-            SEC’s 2018 complaint contains allegations.
+            <b>Scheme and materiality (60 seconds).</b> Ask how the investor
+            demonstrations created a misleading impression while concealing
+            where testing happened. Then connect the SEC’s historical-revenue
+            allegation to what would matter to someone deciding to invest. The
+            court’s account summarizes trial testimony; the SEC complaint
+            records allegations.
           </li>
           <li>
             <b>Wires (30 seconds).</b> Prosecutors traced interstate transfers

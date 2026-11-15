@@ -7,6 +7,7 @@ import {
   completedCount,
   takeHint,
   wireFinding,
+  conclusionFinding,
 } from "../src/game";
 describe("classroom investigation", () => {
   it("normalizes case and whitespace without dropping hyphens or leading zeroes", () => {
@@ -27,8 +28,8 @@ describe("classroom investigation", () => {
       " all ",
       "tt3",
       " several ",
-      "60 - 108",
-      "no",
+      "ac",
+      "108",
       "6 - ac",
       "k7q-51-108-07-38",
     ];
@@ -44,14 +45,17 @@ describe("classroom investigation", () => {
     expect(g.completedAt).toBe(2006);
     expect(submit(g, answers[6], 4, 9000)).toBe(g);
   });
-  it("requires both revenue figures and the judgment before awarding materiality", () => {
+  it("requires both demonstration details and the revenue finding before awarding the fragment", () => {
     let g = { ...newGame("Test", "", 10), step: 3 };
-    expect(submit(g, "60", 2)).toBe(g);
+    expect(submit(g, "60-108", 2)).toBe(g);
+    expect(submit(g, conclusionFinding(["A"]), 2)).toBe(g);
+    expect(submit(g, conclusionFinding(["A", "B", "C"]), 2)).toBe(g);
+    expect(submit(g, conclusionFinding(["A", "B", "C", "D"]), 2)).toBe(g);
     expect(submit(g, "108", 2)).toBe(g);
-    g = submit(g, "60-108", 2);
+    g = submit(g, conclusionFinding(["C", "A"]), 2);
     expect(completedCount(g.step)).toBe(2);
-    expect(submit(g, "YES", 2)).toBe(g);
-    g = submit(g, "NO", 2);
+    expect(submit(g, "NO", 2)).toBe(g);
+    g = submit(g, "108", 2);
     expect(completedCount(g.step)).toBe(3);
   });
   it("spends exactly two hints and keeps an audit trail", () => {
