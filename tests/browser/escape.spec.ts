@@ -3,8 +3,16 @@ async function openEntry(page: Page, name: string) {
   await page.locator(".directory-row").filter({ hasText: name }).click();
 }
 async function login(page: Page, team: string) {
+  await expect(
+    page.getByRole("link", { name: "Presenter access" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("Local browser storage only. No accounts. No database.", {
+      exact: true,
+    }),
+  ).toHaveCount(0);
   await page.getByLabel("TEAM NAME").fill(team);
-  await page.getByRole("button", { name: "Enter database / start" }).click();
+  await page.getByRole("button", { name: "Enter database" }).click();
   await expect(
     page.getByRole("dialog", { name: "You’re in. Look closer." }),
   ).toBeVisible();
@@ -201,7 +209,7 @@ test("teams explore directories, unlock files manually, and escape", async ({
   await expect(
     page.getByRole("heading", { name: /You escaped/ }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Show evidence worksheet" }).click();
+  await page.getByRole("button", { name: "Open case summary" }).click();
   await page
     .getByText("How the evidence fits together", { exact: true })
     .click();
@@ -228,9 +236,13 @@ test("mobile exploration, briefing persistence, hints, expiry, and presenter pri
   ).toBeTruthy();
   await openEntry(page, "01_the_claim");
   await openEntry(page, "website_comments_2013.eml");
-  await page.getByRole("button", { name: "Request hint (2 left)" }).click();
+  await page
+    .getByRole("button", { name: "Contact whistleblower (2 requests left)" })
+    .click();
   await expect(
-    page.getByRole("button", { name: "Request hint (1 left)" }),
+    page.getByRole("button", {
+      name: "Contact whistleblower (1 requests left)",
+    }),
   ).toBeVisible();
   await page.screenshot({ path: "test-results/mobile.png", fullPage: true });
   expect(

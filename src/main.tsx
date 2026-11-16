@@ -162,7 +162,7 @@ function Document({
       <>
         <SourceMeta index={0} />
         <article className="paper email">
-          <div className="paper-label">AUTHENTIC EXCERPTS · TRANSCRIPTION</div>
+          <div className="paper-label">EXHIBIT 3965 · TRANSCRIBED EMAIL</div>
           <h2>Website comments</h2>
           <dl>
             <dt>From</dt>
@@ -230,7 +230,7 @@ function Document({
         <SourceMeta index={1} />
         <article className="paper lab">
           <div className="paper-label">
-            AUTHENTIC REPORT · FAITHFUL DATA REPRODUCTION
+            EXHIBIT 1633 · QC TABLE TRANSCRIPTION
           </div>
           <h2>March ELISA QC failures</h2>
           <p className="annotation">
@@ -282,9 +282,7 @@ function Document({
       <>
         <SourceMeta index={2} />
         <article className="paper email">
-          <div className="paper-label">
-            AUTHENTIC EMAIL CHAIN · EXCERPT + ORIGINAL SCANS
-          </div>
+          <div className="paper-label">EXHIBIT 3981 · EMAIL CHAIN</div>
           <h2>Fwd: Website comments</h2>
           <dl>
             <dt>Forwarded by</dt>
@@ -525,7 +523,7 @@ const questions = [
   "Which two details distinguish this demonstration from an openly disclosed test using outside equipment? Select both.",
   "According to the SEC complaint, what was a prospective investor told Theranos had already earned in 2014? Enter the amount in millions.",
   "Find the Citibank investor payment that came after the marketing warnings but before the SEC complaint. Record the count, then select only the conclusions supported by the records.",
-  "Enter the token and arrange your evidence fragments in the order printed on the physical card.",
+  "Enter the security token from the physical card, followed by your fragment numbers in the order printed on that card. Put a dash (-) between the token and the first fragment number, and between each fragment number. Keep any leading zeros.",
 ];
 
 function App() {
@@ -595,7 +593,7 @@ function App() {
   function reset() {
     if (
       window.confirm(
-        "Start over? This permanently clears this browser’s team progress, hints, and timer.",
+        "Reset investigation? This clears all recovered evidence, verified findings, assistance credits, and the audit clock.",
       )
     ) {
       try {
@@ -630,7 +628,7 @@ function App() {
       setMessage(
         selected === 4
           ? "ACCESS DENIED. Credential does not match the physical backup key."
-          : "Finding not verified. Check the record or ask for a hint.",
+          : "Finding not verified. Recheck the record or contact your whistleblower.",
       );
       return;
     }
@@ -692,9 +690,11 @@ function App() {
   const footer = (
     <footer>
       <span>INTERNAL ARCHIVE / ACCESS LOGGED</span>
-      <a href="#/presenter">
-        Presenter access <ChevronRight size={12} />
-      </a>
+      {isPresenter && (
+        <a href="#/presenter">
+          Presenter access <ChevronRight size={12} />
+        </a>
+      )}
     </footer>
   );
   if (isPresenter)
@@ -791,7 +791,7 @@ function App() {
                 <div className="resume">
                   <strong>{game.team}</strong>
                   <span>
-                    {count} / 4 elements recovered · timer continues while away
+                    {count} / 4 elements recovered · audit window remains active
                   </span>
                 </div>
                 <button
@@ -804,7 +804,7 @@ function App() {
                   Continue existing investigation <ArrowRight size={16} />
                 </button>
                 <button className="text-button" onClick={reset}>
-                  <RotateCcw size={14} /> Start over
+                  <RotateCcw size={14} /> Reset investigation
                 </button>
               </>
             ) : (
@@ -839,19 +839,15 @@ function App() {
                 <div className="briefing">
                   <LockKeyhole size={15} />
                   <span>
-                    Wait for your presenter’s “Go.” Starting opens your{" "}
-                    {duration}-minute audit window. Two hint credits included.
-                    The last clue is physically in the classroom.
+                    Wait for your whistleblower’s signal. Entering the archive
+                    opens your {duration}-minute security audit window.
                   </span>
                 </div>
                 <button className="primary" type="submit">
-                  Enter database / start <ArrowRight size={16} />
+                  Enter database <ArrowRight size={16} />
                 </button>
               </form>
             )}
-            <p className="fine">
-              Local browser storage only. No accounts. No database.
-            </p>
           </section>
         </main>
         {footer}
@@ -862,8 +858,8 @@ function App() {
       {top}
       {storageError && (
         <div role="alert" className="security-alert">
-          Browser storage is unavailable. Keep this tab open; refresh may lose
-          progress.
+          Archive autosave is unavailable. Keep this session open to protect
+          your recovered evidence.
         </div>
       )}
       <div className="app-layout">
@@ -932,7 +928,7 @@ function App() {
               QUESTION EVERYTHING.
             </p>
             <button className="text-button" onClick={reset}>
-              <RotateCcw size={13} /> Start over
+              <RotateCcw size={13} /> Reset investigation
             </button>
           </div>
         </nav>
@@ -952,7 +948,7 @@ function App() {
           {remaining <= 360 && !game.completedAt && (
             <div className="security-alert" role="status">
               {remaining === 0
-                ? "AUDIT WINDOW EXPIRED. Your evidence is retained. A presenter may allow you to continue or ask you to review."
+                ? "AUDIT WINDOW EXPIRED. Evidence retained. Contact your whistleblower for clearance to continue."
                 : remaining <= 120
                   ? "Employee access permissions will be audited shortly."
                   : "IT has detected unusual file activity."}{" "}
@@ -1043,11 +1039,13 @@ function App() {
                 className="primary"
                 onClick={() => setWorksheet(!worksheet)}
               >
-                Show evidence worksheet <FileText size={16} />
+                Open case summary <FileText size={16} />
               </button>
               <p>
-                <b>Show this success screen to a presenter.</b> The first
-                verified team can be announced as the winner.
+                <b>
+                  Present this clearance confirmation to your whistleblower
+                  contact.
+                </b>
               </p>
             </section>
           ) : selected === 4 ? (
@@ -1066,12 +1064,18 @@ function App() {
                 <p>
                   The final executive credential is not stored in the network.
                   IT’s audit note points to a physical override card secured{" "}
-                  <b>under the podium at the front of the classroom.</b>
+                  <b>under the podium at the front of the room.</b>
                 </p>
                 <p>
                   Send <b>ONE runner</b> to retrieve or read the clue, return to
                   your team, and enter the complete credential. Do not move the
                   podium or touch electronics.
+                </p>
+                <p>
+                  Use the <b>fragment numbers</b> from your Case Evidence
+                  notebook, rather than the element letters or your puzzle
+                  answers. Separate the physical card’s security token and every
+                  fragment number with a dash (-).
                 </p>
                 <span className="eyebrow">
                   EXECUTIVE CREDENTIAL / PHYSICAL BACKUP
@@ -1302,11 +1306,13 @@ function App() {
                     disabled={game.hints === 0}
                     onClick={() => setGame(takeHint(game))}
                   >
-                    <Lightbulb size={15} /> Request hint ({game.hints} left)
+                    <Lightbulb size={15} /> Contact whistleblower ({game.hints}{" "}
+                    requests left)
                   </button>
                   {game.hints === 0 && (
                     <span className="fine">
-                      Ask a presenter for assistance.
+                      Channel limit reached. Contact your whistleblower
+                      directly.
                     </span>
                   )}
                 </div>
@@ -1447,9 +1453,7 @@ function App() {
         >
           <X />
         </button>
-        <p>
-          Original exhibit page · Scroll to read. Use browser zoom to enlarge.
-        </p>
+        <p>Exhibit preview · Scroll to inspect.</p>
         {zoom && (
           <img
             src={zoom}
@@ -1634,8 +1638,8 @@ function Presenter({
         <p>
           Rehearsal: open the student link, enter a team, complete each answer
           above, refresh mid-round to check persistence, then enter the final
-          code only at the final stage. Use “Start over” with confirmation for a
-          fresh run.
+          code only at the final stage. Use “Reset investigation” with
+          confirmation for a fresh run.
         </p>
       </section>
       <section className="panel">
