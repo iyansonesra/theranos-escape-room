@@ -742,8 +742,11 @@ function App() {
               <span className="status-dot" /> NEW-HIRE ORIENTATION / 2015
             </span>
             <h1>
-              One drop.
-              <br />A world of <em>secrets.</em>
+              One tiny drop
+              <br />
+              changes
+              <br />
+              <em>everything.</em>
             </h1>
             <p className="lead">
               Welcome to Theranos.
